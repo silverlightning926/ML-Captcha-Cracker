@@ -9,7 +9,7 @@ import numpy as np
 
 def encode_answer(label):
 
-        encoded_label = np.zeros((5, 62), dtype=np.uint8)
+        encoded_label = np.zeros((5, 36), dtype=np.uint8)
 
         for i in range(5):
             index = ord(label[i])
@@ -19,9 +19,6 @@ def encode_answer(label):
 
             if 97 <= index <= 122:
                 index -= 97 - 10
-
-            if 65 <= index <= 90:
-                index -= 65 - 36
 
             encoded_label[i][index] = 1
 
@@ -43,9 +40,6 @@ def decode_answer(encoded_label):
 
         if 10 <= index <= 35:
             character = chr(index + 97 - 10)
-
-        if 36 <= index <= 61:
-            character = chr(index + 65 - 36)
 
         decoded_label += character
 
@@ -74,7 +68,7 @@ def build_model():
 
     model.add(Dense(62 * 5))
 
-    model.add(Reshape((5, 62)))
+    model.add(Reshape((5, 36)))
 
     model.add(Activation('softmax'))
 
