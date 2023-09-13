@@ -130,3 +130,19 @@ class CaptchaSolverModel:
         print("Training Data: {}, Testing Data: {}".format(len(training_data), len(testing_data)))
 
         return training_data, testing_data
+
+    def train(self):
+
+        x = []
+        y = []
+
+        for training_answer, training_image in self.training_data.items():
+            x.append(np.array(training_image))
+            y.append(encode_answer(training_answer))
+
+        x = np.array(x)
+        y = np.array(y)
+
+        self.model.fit(x, y, epochs=50, batch_size=16, validation_split=0.1, verbose=1, shuffle=True)
+
+        self.model.save('captcha_solver_model.keras')
