@@ -146,3 +146,6 @@ class CaptchaSolverModel:
         self.model.fit(x, y, epochs=50, batch_size=16, validation_split=0.1, verbose=1, shuffle=True)
 
         self.model.save('captcha_solver_model.keras')
+
+    def predict(self, image):
+        return decode_answer(self.model.predict(np.array([image]))[0])
