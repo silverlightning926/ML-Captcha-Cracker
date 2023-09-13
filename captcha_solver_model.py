@@ -149,3 +149,22 @@ class CaptchaSolverModel:
 
     def predict(self, image):
         return decode_answer(self.model.predict(np.array([image]))[0])
+
+
+if __name__ == '__main__':
+    model = CaptchaSolverModel()
+    model.train()
+
+    accuracy = 0.0
+    count = 0
+
+    for label, image in model.testing_data.items():
+
+        prediction = model.predict(np.array(image))
+
+        if prediction == label:
+            accuracy += 1
+
+        count += 1
+
+        print("CAPTCHA Prediction: {}, CAPTCHA Answer: {}, Accuracy: {}".format(prediction, label, accuracy / count))
