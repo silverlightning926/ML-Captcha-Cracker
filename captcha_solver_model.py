@@ -66,7 +66,7 @@ def build_model():
 
     model.add(Dense(64))
 
-    model.add(Dense(62 * 5))
+    model.add(Dense(36 * 5))
 
     model.add(Reshape((5, 36)))
 
