@@ -1,7 +1,8 @@
 import os
 import random
 
-from keras import preprocessing
+from keras import preprocessing, Sequential
+from keras.src.layers import Conv2D, Activation, MaxPooling2D, Flatten, Dense, Reshape
 
 import numpy as np
 
@@ -51,12 +52,51 @@ def decode_answer(encoded_label):
     return decoded_label
 
 
+def build_model():
+
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), input_shape=(50, 200, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Conv2D(32, (3, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Flatten())
+
+    model.add(Dense(64))
+
+    model.add(Dense(62 * 5))
+
+    model.add(Reshape((5, 62)))
+
+    model.add(Activation('softmax'))
+
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    if os.path.exists('captcha_solver_model.keras'):
+
+        model.load_weights('captcha_solver_model.keras')
+        print("Loaded Weights from captcha_solver_model.keras")
+
+    model.summary()
+
+    return model
+
+
 class CaptchaSolverModel:
 
     _DATASET_PATH = 'data'
 
     def __init__(self):
         self.training_data, self.testing_data = self.split_data()
+        self.model = build_model()
 
     def load_data(self):
         data = {}
